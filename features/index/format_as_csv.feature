@@ -271,3 +271,19 @@ Feature: Format as CSV
     Then I should download a CSV file for "posts" containing:
     | Id  | Title       | Decorator method                         |
     | \d+ | Hello World | A method only available on the decorator |
+
+  Scenario: With pagination
+    Given a configuration of:
+    """
+      ActiveAdmin.register Post do
+        config.per_page = 1
+      end
+    """
+    And a post with the title "Hello World" exists
+    And a post with the title "Hello Mars" exists
+    When I am on the index page for posts
+    And I follow "CSV"
+    Then I should download a CSV file for "posts" containing:
+    | Id  | Title       | Body | Published date | Position | Starred | Foo    |Created at | Updated at |
+    | \d+ | Hello Mars  |      |                |          |         |        |(.*)       | (.*)       |
+    | \d+ | Hello World |      |                |          |         |        |(.*)       | (.*)       |

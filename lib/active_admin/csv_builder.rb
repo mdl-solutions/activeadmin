@@ -43,7 +43,7 @@ module ActiveAdmin
     end
 
     def build(controller, csv)
-      @collection = controller.send :find_collection, except: :pagination
+      @collection = controller.send :collection
       columns = exec_columns controller.view_context
       bom = options.delete :byte_order_mark
       column_names = options.delete(:column_names) { true }

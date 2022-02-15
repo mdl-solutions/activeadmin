@@ -203,10 +203,6 @@ RSpec.describe ActiveAdmin::CSVBuilder do
     end
     let(:dummy_controller) do
       class DummyController
-        def find_collection(*)
-          collection
-        end
-
         def collection
           Post.order("published_date DESC")
         end
@@ -234,14 +230,6 @@ RSpec.describe ActiveAdmin::CSVBuilder do
       builder.build dummy_controller, []
     end
 
-    it "should generate data ignoring pagination" do
-      expect(dummy_controller).to receive(:find_collection).
-        with(except: :pagination).once.
-        and_call_original
-      expect(builder).to receive(:build_row).and_return([]).twice
-      builder.build dummy_controller, []
-    end
-
     it "should disable the ActiveRecord query cache" do
       expect(builder).to receive(:build_row).twice do
         expect(ActiveRecord::Base.connection.query_cache_enabled).to be_falsy
@@ -256,10 +244,6 @@ RSpec.describe ActiveAdmin::CSVBuilder do
   context "build csv using specified encoding and encoding_options" do
     let(:dummy_controller) do
       class DummyController
-        def find_collection(*)
-          collection
-        end
-
         def collection
           Post
         end
