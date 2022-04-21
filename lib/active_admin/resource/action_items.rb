@@ -66,7 +66,13 @@ module ActiveAdmin
         add_action_item :new, only: :index do
           if controller.action_methods.include?("new") && authorized?(ActiveAdmin::Auth::CREATE, active_admin_config.resource_class)
             localizer = ActiveAdmin::Localizers.resource(active_admin_config)
-            link_to localizer.t(:new_model), new_resource_path
+            a(
+              [
+                i('', { class: 'me-1 fas fa-plus' }),
+                text_node(localizer.t(:new_model)),
+              ],
+              { href: new_resource_path, class: 'btn btn-primary' }
+            ).to_s
           end
         end
       end
@@ -76,7 +82,7 @@ module ActiveAdmin
         add_action_item :edit, only: :show do
           if controller.action_methods.include?("edit") && authorized?(ActiveAdmin::Auth::UPDATE, resource)
             localizer = ActiveAdmin::Localizers.resource(active_admin_config)
-            link_to localizer.t(:edit_model), edit_resource_path(resource)
+            link_to localizer.t(:edit_model), edit_resource_path(resource), class: 'btn btn-secondary'
           end
         end
       end
@@ -87,7 +93,7 @@ module ActiveAdmin
           if controller.action_methods.include?("destroy") && authorized?(ActiveAdmin::Auth::DESTROY, resource)
             localizer = ActiveAdmin::Localizers.resource(active_admin_config)
             link_to localizer.t(:delete_model), resource_path(resource), method: :delete,
-                                                                         data: { confirm: localizer.t(:delete_confirmation) }
+                                                                         data: { confirm: localizer.t(:delete_confirmation) }, class: 'btn btn-secondary'
           end
         end
       end

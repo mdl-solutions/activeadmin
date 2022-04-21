@@ -25,9 +25,13 @@ module ActiveAdmin
       def build(name, options = {})
         options = options.dup
 
-        # Easily set options for the button or menu
-        button_options = options.delete(:button) || {}
         menu_options = options.delete(:menu) || {}
+        menu_options[:id] = "#{options[:id]}-dropdown"
+
+        button_options = options.delete(:button) || {}
+        button_options.delete(:id)
+        button_options[:href] = "##{options[:id]}-menu"
+        button_options[:'data-bs-target'] = "##{options[:id]}-dropdown"
 
         @button = build_button(name, button_options)
         @menu = build_menu(menu_options)
@@ -37,7 +41,7 @@ module ActiveAdmin
 
       def item(*args, **kwargs)
         within @menu do
-          li link_to(*args, **kwargs)
+          li link_to(*args, **kwargs), class: 'dropdown-item'
         end
       end
 
@@ -45,7 +49,10 @@ module ActiveAdmin
 
       def build_button(name, button_options)
         button_options[:class] ||= ""
-        button_options[:class] << " dropdown_menu_button"
+        button_options[:class] << " dropdown-toggle"
+
+        button_options[:role] = 'button'
+        button_options[:'data-bs-toggle'] = 'dropdown'
 
         button_options[:href] = "#"
 
@@ -54,13 +61,15 @@ module ActiveAdmin
 
       def build_menu(options)
         options[:class] ||= ""
-        options[:class] << " dropdown_menu_list"
+        options[:class] << " dropdown-menu dropdown-menu-end"
+        # options[:class] << " dropdown_menu_list dropdown-menu" # keep dropdown_menu_list for js compatibility but also add Bootstrap dropdown-menu
 
         menu_list = nil
 
-        div class: "dropdown_menu_list_wrapper" do
-          menu_list = ul(options)
-        end
+        # div id: options[:id] do
+        #   menu_list = ul(options.except(:id))
+        # end
+        menu_list = ul(options)
 
         menu_list
       end

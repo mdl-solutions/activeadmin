@@ -130,10 +130,10 @@ module ActiveAdmin
         html_options[:class] ||= "inputs"
         legend = args.shift if args.first.is_a?(::String)
         legend = html_options.delete(:name) if html_options.key?(:name)
-        legend_tag = legend ? "<legend><span>#{legend}</span></legend>" : ""
+        legend_tag = legend ? "<div class='card-header'>#{legend}</div>" : ""
         fieldset_attrs = html_options.map { |k, v| %Q{#{k}="#{v}"} }.join(" ")
-        @opening_tag = "<fieldset #{fieldset_attrs}>#{legend_tag}<ol>"
-        @closing_tag = "</ol></fieldset>"
+        @opening_tag = "<div class='card mb-3' #{fieldset_attrs}>#{legend_tag}<div class='card-body'>"
+        @closing_tag = "</div></div>"
         super(*(args << html_options), &block)
       end
     end

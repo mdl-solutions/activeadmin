@@ -9,7 +9,11 @@ module ActiveAdmin
         autoload :SearchMethodSelect
 
         def input_wrapping(&block)
-          template.content_tag :div, template.capture(&block), wrapper_html_options
+          template.content_tag(
+            :div,
+            template.content_tag(:div, template.capture(&block), wrapper_html_options),
+            { class: 'col' }
+          )
         end
 
         def required?
@@ -22,6 +26,12 @@ module ActiveAdmin
           res = res.call if res.is_a? Proc
           res
         end
+
+        # def label_html_options
+        #   opts = super
+        #   opts[:class] = "input-group-text"
+        #   opts
+        # end
 
         def wrapper_html_options
           opts = super

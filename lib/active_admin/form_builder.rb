@@ -56,7 +56,7 @@ module ActiveAdmin
 
     def render(&block)
       html = "".html_safe
-      html << template.content_tag(:h3) { heading } if heading.present?
+      html << template.content_tag(:div, class: 'form-label') { heading } if heading.present?
       html << template.capture { content_has_many(&block) }
       html = wrap_div_or_li(html)
       template.concat(html) if template.output_buffer

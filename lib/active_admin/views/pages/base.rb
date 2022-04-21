@@ -52,12 +52,32 @@ module ActiveAdmin
 
         def build_page
           within body(class: body_classes) do
-            div id: "wrapper" do
-              build_unsupported_browser
-              header active_admin_namespace, current_menu
-              title_bar title, action_items_for_action
-              build_page_content
-              footer active_admin_namespace
+            div class: "container-fluid" do
+              div id: 'top-bar', class: "row fixed-top" do
+                @utility_menu = active_admin_namespace.fetch_menu(:utility_navigation)
+                
+                div class: 'd-flex' do
+                  div class: 'p-2 flex-grow-1' do
+                    site_title active_admin_namespace
+                  end
+                  # div class: 'p-2' do
+                  #   utility_navigation @utility_menu, id: "utility_nav", class: "header-item tabs"
+                  # end
+                  div class: 'p-2' do
+                    i class: 'bi bi-person-circle', style: 'font-size: 2rem;'
+                  end
+                end
+              end
+              div class: "row" do
+                div id: 'main-sidebar', class: "col-2 min-vh-100" do
+                  header active_admin_namespace, current_menu
+                end
+                div id: 'main-content', class: "col-10" do
+                  title_bar title, action_items_for_action
+                  build_page_content
+                  footer active_admin_namespace
+                end
+              end
             end
           end
         end
@@ -81,7 +101,7 @@ module ActiveAdmin
           build_flash_messages
           div id: "active_admin_content", class: (skip_sidebar? ? "without_sidebar" : "with_sidebar") do
             build_main_content_wrapper
-            sidebar sidebar_sections_for_action, id: "sidebar" unless skip_sidebar?
+            # sidebar sidebar_sections_for_action, id: "sidebar" unless skip_sidebar?
           end
         end
 

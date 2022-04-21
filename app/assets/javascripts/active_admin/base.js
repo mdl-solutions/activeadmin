@@ -113,13 +113,13 @@
         $(".paginated_collection").checkboxToggler();
       }
       $(document).on("change", ".paginated_collection :checkbox", function() {
-        if ($(".paginated_collection :checkbox:checked").length && $(".dropdown_menu_list").children().length) {
+        if ($(".paginated_collection :checkbox:checked").length) {
           $(".batch_actions_selector").each(function() {
-            $(this).aaDropdownMenu("enable");
+            $("a.dropdown-toggle", $(this)).removeClass("disabled");
           });
         } else {
           $(".batch_actions_selector").each(function() {
-            $(this).aaDropdownMenu("disable");
+            $("a.dropdown-toggle", $(this)).addClass("disabled");
           });
         }
       });

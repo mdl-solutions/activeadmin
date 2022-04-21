@@ -7,7 +7,7 @@ module ActiveAdmin
       # Takes a ActiveAdmin::SidebarSection instance
       def build(section)
         @section = section
-        super(@section.title)
+        super(@section.title, @section.options)
         add_class @section.custom_class if @section.custom_class
         self.id = @section.id
         build_sidebar_content

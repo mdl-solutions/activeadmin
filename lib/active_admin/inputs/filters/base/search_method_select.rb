@@ -38,17 +38,25 @@ module ActiveAdmin
           def to_html
             input_wrapping do
               label_html << # your label
-              select_html << # the dropdown that holds the available search methods
-              input_html # your input field
+              template.content_tag(
+                :div,
+                select_html << # the dropdown that holds the available search methods
+                input_html, # your input field
+                class: 'input-group'
+              )
             end
           end
+
+          # def label_html
+          #   template.span_tag ''
+          # end
 
           def input_html
             builder.text_field current_filter, input_html_options
           end
 
           def select_html
-            template.select_tag "", template.options_for_select(filter_options, current_filter)
+            template.select_tag "", template.options_for_select(filter_options, current_filter), class: 'form-select'
           end
 
           def filters

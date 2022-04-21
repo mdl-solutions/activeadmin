@@ -8,7 +8,7 @@ module ActiveAdmin
         super(attributes)
         add_class "panel"
         @title = h3(title.to_s)
-        @contents = div(class: "panel_contents")
+        @contents = div(class: "panel_contents" + (attributes[:content_class].present? ? " #{attributes[:content_class]}" : ''))
       end
 
       def add_child(child)

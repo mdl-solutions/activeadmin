@@ -22,29 +22,39 @@ module ActiveAdmin
 
       def build(scopes, options = {})
         scopes.group_by(&:group).each do |group, group_scopes|
-          ul class: "table_tools_segmented_control #{group_class(group)}" do
+          # ul class: "table_tools_segmented_control #{group_class(group)}" do
+          div class: "btn-group btn-group-sm #{group_class(group)}" do
+            first = true
             group_scopes.each do |scope|
-              build_scope(scope, options) if call_method_or_exec_proc(scope.display_if_block)
+              build_scope(scope, options, first) if call_method_or_exec_proc(scope.display_if_block)
+              first = false
             end
 
             nil
           end
+          hr
         end
       end
 
       protected
 
-      def build_scope(scope, options)
-        li class: classes_for_scope(scope) do
+      def build_scope(scope, options, first)
+        # li class: classes_for_scope(scope) do
+          classes = 'btn btn-outline-secondary'
+          if request.query_parameters[:scope] == scope.id || (first && request.query_parameters[:scope].blank?)
+            classes += ' active'
+          end
+          
           params = request.query_parameters.except :page, :scope, :commit, :format
 
-          a href: url_for(scope: scope.id, params: params), class: "table_tools_button" do
+          # a href: url_for(scope: scope.id, params: params), class: "table_tools_button" do
+          a href: url_for(scope: scope.id, params: params), class: classes do
             text_node scope_name(scope)
             span class: "count" do
               "(#{get_scope_count(scope)})"
             end if options[:scope_count] && scope.show_count
           end
-        end
+        # end
       end
 
       def classes_for_scope(scope)
