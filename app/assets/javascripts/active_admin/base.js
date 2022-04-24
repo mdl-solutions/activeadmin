@@ -366,7 +366,7 @@
     $(document).on("click", "a.button.has_many_remove", function(event) {
       event.preventDefault();
       var parent = $(this).closest(".has_many_container");
-      var to_remove = $(this).closest("fieldset");
+      var to_remove = $(this).closest(".has_many_fields");
       recompute_positions(parent);
       parent.trigger("has_many_remove:before", [ to_remove, parent ]);
       to_remove.remove();
@@ -399,7 +399,7 @@
     var elems = $(".has_many_container[data-sortable]:not(.ui-sortable)");
     elems.sortable({
       items: "> fieldset",
-      handle: "> ol > .handle",
+      handle: "> div > .handle",
       start: function start(ev, ui) {
         ui.item.css({
           opacity: .3

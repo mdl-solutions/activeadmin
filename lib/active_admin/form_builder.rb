@@ -58,7 +58,7 @@ module ActiveAdmin
       html = "".html_safe
       html << template.content_tag(:div, class: 'form-label') { heading } if heading.present?
       html << template.capture { content_has_many(&block) }
-      html = wrap_div_or_li(html)
+      html = wrap_div_or_li(html, @options[:container_html] || {})
       template.concat(html) if template.output_buffer
       html
     end
@@ -107,9 +107,9 @@ module ActiveAdmin
 
     def has_many_actions(form_builder, contents)
       if form_builder.object.new_record?
-        contents << template.content_tag(:li) do
+        contents << template.content_tag(:div) do
           remove_text = remove_record.is_a?(String) ? remove_record : I18n.t("active_admin.has_many_remove")
-          template.link_to remove_text, "#", class: "button has_many_remove"
+          template.link_to remove_text, "#", class: "button has_many_remove btn btn-outline-danger mb-3"
         end
       elsif allow_destroy?(form_builder.object)
         form_builder.input(
@@ -121,7 +121,8 @@ module ActiveAdmin
       if sortable_column
         form_builder.input sortable_column, as: :hidden
 
-        contents << template.content_tag(:li, class: "handle") do
+        contents << template.content_tag(:div, class: "handle") do
+          template.content_tag(:i, '', class: 'fas fa-arrows me-1') <<
           I18n.t("active_admin.move")
         end
       end
@@ -169,17 +170,19 @@ module ActiveAdmin
       html = template.capture { __getobj__.send(:inputs_for_nested_attributes, opts, &form_block) }
       text = new_record.is_a?(String) ? new_record : I18n.t("active_admin.has_many_new", model: assoc_name.human)
 
-      template.link_to text, "#", class: "button has_many_add", data: {
+      template.link_to text, "#", class: "button has_many_add btn btn-outline-success", data: {
         html: CGI.escapeHTML(html).html_safe, placeholder: placeholder
       }
     end
 
-    def wrap_div_or_li(html)
+    def wrap_div_or_li(html, options = {})
+      classes = ["has_many_container #{assoc}", options[:class] || ''].join(' ')
+      
       template.content_tag(
         # already_in_an_inputs_block ? :li : :div,
         :div,
         html,
-        class: "has_many_container #{assoc}",
+        class: classes,
         "data-sortable" => sortable_column,
         "data-sortable-start" => sortable_start)
     end
