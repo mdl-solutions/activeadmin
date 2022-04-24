@@ -79,7 +79,7 @@ module ActiveAdmin
 
       def commit_action_with_cancel_link
         add_create_another_checkbox
-        action(:submit)
+        action(:submit, { button_html: { class: 'btn btn-primary me-3' }})
         cancel_link
       end
 
@@ -140,8 +140,8 @@ module ActiveAdmin
 
     class SemanticActionsProxy < FormtasticProxy
       def build(form_builder, *args, &block)
-        @opening_tag = "<fieldset class=\"actions\"><ol>"
-        @closing_tag = "</ol></fieldset>"
+        @opening_tag = "<div class=\"actions d-flex flex-row\">"
+        @closing_tag = "</div>"
         super(*args, &block)
       end
     end

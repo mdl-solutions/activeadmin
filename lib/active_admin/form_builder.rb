@@ -22,8 +22,8 @@ module ActiveAdmin
 
     def cancel_link(url = { action: "index" }, html_options = {}, li_attrs = {})
       li_attrs[:class] ||= "cancel"
-      li_content = template.link_to I18n.t("active_admin.cancel"), url, html_options
-      template.content_tag(:li, li_content, li_attrs)
+      li_content = template.link_to I18n.t("active_admin.cancel"), url, { class: 'btn btn-light' }.merge(html_options)
+      template.content_tag(:div, li_content, li_attrs)
     end
 
     attr_accessor :already_in_an_inputs_block
@@ -176,7 +176,8 @@ module ActiveAdmin
 
     def wrap_div_or_li(html)
       template.content_tag(
-        already_in_an_inputs_block ? :li : :div,
+        # already_in_an_inputs_block ? :li : :div,
+        :div,
         html,
         class: "has_many_container #{assoc}",
         "data-sortable" => sortable_column,

@@ -133,6 +133,7 @@ module ActiveAdmin
     # action.
     #
     def action(set, name, options = {}, &block)
+      Rails.logger.info(options.inspect)
       warn "Warning: method `#{name}` already defined in #{controller.name}" if controller.method_defined?(name)
 
       set << ControllerAction.new(name, options)
