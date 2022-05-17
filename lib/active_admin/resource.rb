@@ -53,6 +53,9 @@ module ActiveAdmin
     # Set breadcrumb builder
     attr_writer :breadcrumb
 
+    # Set blank slate builder
+    attr_writer :blank_slate
+
     #Set order clause
     attr_writer :order_clause
     # Display create another checkbox on a new page
@@ -164,6 +167,10 @@ module ActiveAdmin
 
     def breadcrumb
       instance_variable_defined?(:@breadcrumb) ? @breadcrumb : namespace.breadcrumb
+    end
+
+    def blank_slate
+      instance_variable_defined?(:@blank_slate) ? @blank_slate : namespace.blank_slate
     end
 
     def order_clause

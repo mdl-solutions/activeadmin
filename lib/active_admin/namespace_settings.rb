@@ -68,6 +68,9 @@ module ActiveAdmin
     # Display breadcrumbs
     register :breadcrumb, true
 
+    # Set the content to use on index pages when no records have been created
+    register :blank_slate, nil
+
     # Display create another checkbox on a new page
     # @return [Boolean] (true)
     register :create_another, false

@@ -79,6 +79,12 @@ module ActiveAdmin
       end
     end
 
+
+    # Configure the blank slate for the resource
+    def blank_slate(&block)
+      config.blank_slate = block
+    end
+
     # Configure the index page for the resource
     def index(options = {}, &block)
       options[:as] ||= :table

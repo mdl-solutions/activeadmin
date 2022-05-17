@@ -234,6 +234,8 @@ module ActiveAdmin
     #
     class IndexAsTable < ActiveAdmin::Component
 
+      include ActiveAdmin::ViewHelpers::IndexHelper
+
       def build(page_presenter, collection)
         table_options = {
           id: "index_table_#{active_admin_config.resource_name.plural}",
@@ -244,66 +246,11 @@ module ActiveAdmin
           row_class: page_presenter[:row_class]
         }
         
-        div class: 'card' do
-          div class: 'card-header d-flex pe-0' do
-            # span('Overzicht', { class: 'py-2 flex-grow-1' })
-            # a([i('', { class: 'me-1 fas fa-cogs' }), text_node('Batch acties')], { href: '#', class: 'btn disabled' })
-            # a([i('', { class: 'me-1 fas fa-columns' }), text_node('Kolommen')], { href: '#columns', class: 'btn', role: 'button', 'data-bs-toggle': 'collapse' })
-            # a([i('', { class: 'me-1 fas fa-filter' }), text_node('Filters'), span('4', { class: 'ms-1 badge bg-light text-dark' })], { href: '#filters', class: 'btn', role: 'button', 'data-bs-toggle': 'collapse' })
-            ul class: 'nav nav-tabs card-header-tabs' do
-              li class: 'nav-item' do
-                a class: 'nav-link active', id: 'nav-index-tab', role: 'button', href: '#nav-index', 'data-bs-toggle': 'tab', 'aria-current': true do
-                  [
-                    i('', { class: 'me-1 fas fa-list' }),
-                    text_node('Overzicht'),
-                  ]
-                end
-              end
-              li class: 'nav-item' do
-                a class: 'nav-link', id: 'nav-filters-tab', role: 'button', href: '#nav-filters', 'data-bs-toggle': 'tab' do
-                  [
-                    i('', { class: 'me-1 fas fa-filter' }),
-                    text_node('Filters'),
-                    # span('4', { class: 'ms-1 badge bg-light text-dark' }),
-                  ]
-                end
-              end
-              li class: 'nav-item' do
-                a class: 'nav-link', id: 'nav-columns-tab', role: 'button', href: '#nav-columns', 'data-bs-toggle': 'tab' do
-                  [
-                    i('', { class: 'me-1 fas fa-columns' }),
-                    text_node('Kolommen'),
-                  ]
-                end
-              end
-            end
-          end
-          # div id: 'filters', class: 'card-body bg-light border-bottom' do
-          #   span('Filters')
-          # end
-          # div id: 'columns', class: 'card-body bg-light border-bottom' do
-          #   span('Kolommen')
-          # end
-          div class: "card-body" do
-            div class: 'tab-content', id: 'nav-tabContent' do
-              div class: 'tab-pane fade show active', id: 'nav-index', role: 'tabpanel', 'aria-labelledby': 'nav-index-tab' do
-                div class: "table-responsive" do
-                  table_for collection, table_options do |t|
-                    table_config_block = page_presenter.block || default_table
-                    instance_exec(t, &table_config_block)
-                  end
-                end
-              end
-              div class: 'tab-pane fade', id: 'nav-filters', role: 'tabpanel', 'aria-labelledby': 'nav-filters-tab' do
-                sidebar_sections_for_action = []
-                if active_admin_config && active_admin_config.sidebar_sections?
-                  sidebar_sections_for_action = active_admin_config.sidebar_sections_for(params[:action], self)
-                end
-                
-                sidebar sidebar_sections_for_action, id: "sidebar" unless skip_sidebar?
-              end
-              div class: 'tab-pane fade', id: 'nav-columns', role: 'tabpanel', 'aria-labelledby': 'nav-columns-tab' do
-              end
+        index_tabs do
+          div class: "table-responsive" do
+            table_for collection, table_options do |t|
+              table_config_block = page_presenter.block || default_table
+              instance_exec(t, &table_config_block)
             end
           end
         end
@@ -423,11 +370,12 @@ module ActiveAdmin
               end
             else
               table_actions do
-                defaults(resource, css_class: :member_link) if defaults
+                defaults_before(resource, css_class: :member_link) if defaults
                 if block_given?
                   block_result = instance_exec(resource, &block)
                   text_node block_result unless block_result.is_a? Arbre::Element
                 end
+                defaults_after(resource, css_class: :member_link) if defaults
               end
             end
           end
@@ -435,7 +383,7 @@ module ActiveAdmin
 
         private
 
-        def defaults(resource, options = {})
+        def defaults_before(resource, options = {})
           localizer = ActiveAdmin::Localizers.resource(active_admin_config)
           if controller.action_methods.include?("show") && authorized?(ActiveAdmin::Auth::READ, resource)
             item '<i class="mx-1 fas fa-eye" ></i>'.html_safe, resource_path(resource), class: "view_link #{options[:css_class]}", title: localizer.t(:view), 'data-bs-toggle': 'tooltip', 'data-bs-placement': 'top'
@@ -443,6 +391,10 @@ module ActiveAdmin
           if controller.action_methods.include?("edit") && authorized?(ActiveAdmin::Auth::UPDATE, resource)
             item '<i class="mx-1 fas fa-pencil" ></i>'.html_safe, edit_resource_path(resource), class: "edit_link #{options[:css_class]}", title: localizer.t(:edit), 'data-bs-toggle': 'tooltip', 'data-bs-placement': 'top'
           end
+        end
+
+        def defaults_after(resource, options = {})
+          localizer = ActiveAdmin::Localizers.resource(active_admin_config)
           if controller.action_methods.include?("destroy") && authorized?(ActiveAdmin::Auth::DESTROY, resource)
             item '<i class="mx-1 fas fa-trash" ></i>'.html_safe, resource_path(resource), class: "delete_link #{options[:css_class]}", title: localizer.t(:delete), 'data-bs-toggle': 'tooltip', 'data-bs-placement': 'top',
                                                                 method: :delete, data: { confirm: localizer.t(:delete_confirmation) }

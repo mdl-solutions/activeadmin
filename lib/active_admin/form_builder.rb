@@ -31,6 +31,10 @@ module ActiveAdmin
     def has_many(assoc, options = {}, &block)
       HasManyBuilder.new(self, assoc, options).render(&block)
     end
+
+    def input_group(options = {}, &block)
+      InputGroupBuilder.new(self, options).render(&block)
+    end
   end
 
   # Decorates a FormBuilder with the additional attributes and methods
@@ -185,6 +189,63 @@ module ActiveAdmin
         class: classes,
         "data-sortable" => sortable_column,
         "data-sortable-start" => sortable_start)
+    end
+  end
+
+  # Wraps several inputs in a Bootstrap input group
+  class InputGroupBuilder < SimpleDelegator
+    attr_reader :options
+
+    def initialize(form, options)
+      super form
+      @options = extract_custom_settings!(options.dup)
+      @options[:class] = [options[:class], "input-group"].compact.join(" ")
+    end
+
+    def render(&block)
+      html = "".html_safe
+      # html << template.content_tag(:div, class: 'form-label') { heading } if heading.present?
+      html << template.capture { content_input_group(&block) }
+      # if template.output_buffer
+         template.concat(html)
+      #   return ''
+      # end
+      # html
+      ''
+    end
+
+    protected
+
+    # remove options that should not render as attributes
+    def extract_custom_settings!(options)
+      options
+    end
+
+    def content_input_group(&block)
+      form_block = proc do |form_builder|
+        render_input_group_form(form_builder, options[:parent], &block)
+      end
+
+      contents = template.content_tag(:div, class: 'input-group d-flex mb-3', &form_block)
+      contents ||= "".html_safe
+    end
+
+    # Renders the Formtastic inputs then appends ActiveAdmin delete and sort actions.
+    def render_input_group_form(form_builder, parent, &block)
+      index = parent && form_builder.send(:parent_child_index, parent)
+      # template.concat 
+      template.capture { yield(form_builder, index) }
+    #   template.concat has_many_actions(form_builder, "".html_safe)
+    end
+
+    def without_wrapper
+      is_being_wrapped = already_in_an_inputs_block
+      self.already_in_an_inputs_block = false
+
+      html = yield
+
+      self.already_in_an_inputs_block = is_being_wrapped
+      html
     end
   end
 end

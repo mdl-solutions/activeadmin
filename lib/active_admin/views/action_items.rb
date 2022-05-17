@@ -7,7 +7,7 @@ module ActiveAdmin
         action_items.each do |action_item|
           span class: action_item.html_class do
             html = instance_exec(&action_item.block)
-            if html.index('btn').nil?
+            if html.present? && html.index('btn').nil?
               class_pos = html[0..(html.index('>') || -1)].index('class=')
               if class_pos.nil?
                 pos = html.index('>') || html.index('/>')
