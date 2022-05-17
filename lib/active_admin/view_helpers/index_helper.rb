@@ -18,7 +18,7 @@ module ActiveAdmin
               #     ]
               #   end
               # end
-              active_admin_config.page_presenters[:index].each do |name, presenter|
+              active_admin_config.page_presenters[:index]&.each do |name, presenter|
                 is_current = current_index?(name.to_s)
                 
                 params = request.query_parameters.except :page, :commit, :format
@@ -88,7 +88,7 @@ module ActiveAdmin
         if params[:as]
           params[:as] == index_name
         else
-          active_admin_config.default_index_class.index_name == index_name
+          active_admin_config.default_index_class&.index_name == index_name
         end
       end
 
