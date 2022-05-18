@@ -48,7 +48,7 @@ module ActiveAdmin
       def active_admin_filters_form_for(search, filters, options = {})
         defaults = { builder: ActiveAdmin::Filters::FormBuilder,
                      url: collection_path,
-                     html: { class: "filter_form" } }
+                     html: { class: "filter_form row row-cols-1 row-cols-lg-2 row-cols-xxl-3" } }
         required = { html: { method: :get },
                      as: :q }
         options = defaults.deep_merge(options).deep_merge(required)
@@ -65,8 +65,8 @@ module ActiveAdmin
           end
 
           buttons = content_tag :div, class: "buttons" do
-            f.submit(I18n.t("active_admin.filters.buttons.filter")) +
-              link_to(I18n.t("active_admin.filters.buttons.clear"), "#", class: "clear_filters_btn") +
+            f.submit(I18n.t("active_admin.filters.buttons.filter"), class: 'btn btn-success me-1') +
+              link_to(I18n.t("active_admin.filters.buttons.clear"), "#", class: "clear_filters_btn btn btn-danger") +
               hidden_field_tags_for(params, except: except_hidden_fields)
           end
 

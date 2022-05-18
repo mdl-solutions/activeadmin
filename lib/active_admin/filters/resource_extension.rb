@@ -164,7 +164,7 @@ module ActiveAdmin
       end
 
       def filters_sidebar_section
-        ActiveAdmin::SidebarSection.new :filters, only: :index, if: -> { active_admin_config.filters.any? }, content_class: 'row row-cols-1 row-cols-lg-2 row-cols-xxl-3' do
+        ActiveAdmin::SidebarSection.new :filters, only: :index, if: -> { active_admin_config.filters.any? } do#, content_class: 'row row-cols-1 row-cols-lg-2 row-cols-xxl-3' do
           active_admin_filters_form_for assigns[:search], **active_admin_config.filters
         end
       end

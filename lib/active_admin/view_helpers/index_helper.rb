@@ -70,12 +70,12 @@ module ActiveAdmin
                 yield
               end
               div class: 'tab-pane fade', id: 'nav-filters', role: 'tabpanel', 'aria-labelledby': 'nav-filters-tab' do
-                sidebar_sections_for_action = []
-                if active_admin_config && active_admin_config.sidebar_sections?
-                  sidebar_sections_for_action = active_admin_config.sidebar_sections_for(params[:action], self)
-                end
+                # sidebar_sections_for_action = []
+                # if active_admin_config && active_admin_config.sidebar_sections?
+                #   sidebar_sections_for_action = active_admin_config.sidebar_sections_for(params[:action], self)
+                # end
                 
-                sidebar sidebar_sections_for_action, id: "sidebar" unless skip_sidebar?
+                # sidebar sidebar_sections_for_action, id: "sidebar" unless skip_sidebar?
               end
               div class: 'tab-pane fade', id: 'nav-columns', role: 'tabpanel', 'aria-labelledby': 'nav-columns-tab' do
               end

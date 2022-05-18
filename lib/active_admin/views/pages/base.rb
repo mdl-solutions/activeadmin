@@ -101,7 +101,7 @@ module ActiveAdmin
           build_flash_messages
           div id: "active_admin_content", class: (skip_sidebar? ? "without_sidebar" : "with_sidebar") do
             build_main_content_wrapper
-            # sidebar sidebar_sections_for_action, id: "sidebar" unless skip_sidebar?
+            sidebar sidebar_sections_for_action, id: "sidebar" unless skip_sidebar?
           end
         end
 
