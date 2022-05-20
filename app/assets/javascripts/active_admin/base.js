@@ -113,13 +113,13 @@
         $(".paginated_collection").checkboxToggler();
       }
       $(document).on("change", ".paginated_collection :checkbox", function() {
-        if ($(".paginated_collection :checkbox:checked").length) {
+        if ($(".paginated_collection :checkbox:checked").length && $(".dropdown_menu_list").children().length) {
           $(".batch_actions_selector").each(function() {
-            $("a.dropdown-toggle", $(this)).removeClass("disabled");
+            $(this).aaDropdownMenu("enable");
           });
         } else {
           $(".batch_actions_selector").each(function() {
-            $("a.dropdown-toggle", $(this)).addClass("disabled");
+            $(this).aaDropdownMenu("disable");
           });
         }
       });
@@ -378,7 +378,7 @@
       var parent = $(this).closest(".has_many_container");
       parent.trigger(before_add = $.Event("has_many_add:before"), [ parent ]);
       if (!before_add.isDefaultPrevented()) {
-        var index = parent.data("has_many_index") || parent.children("fieldset").length - 1;
+        var index = parent.data("has_many_index") || parent.children(".has_many_fields").length - 1;
         parent.data({
           has_many_index: ++index
         });
@@ -398,8 +398,8 @@
   var init_sortable = function init_sortable() {
     var elems = $(".has_many_container[data-sortable]:not(.ui-sortable)");
     elems.sortable({
-      items: "> fieldset",
-      handle: "> div > .handle",
+      items: "> .has_many_fields",
+      handle: "> .card-body > .handle",
       start: function start(ev, ui) {
         ui.item.css({
           opacity: .3
@@ -418,7 +418,7 @@
     parent = parent instanceof jQuery ? parent : $(this);
     var input_name = parent.data("sortable");
     var position = parseInt(parent.data("sortable-start") || 0, 10);
-    parent.children("fieldset").each(function() {
+    parent.children(".has_many_fields").each(function() {
       var destroy_input = $(this).find("> ol > .input > :input[name$='[_destroy]']");
       var sortable_input = $(this).find("> ol > .input > :input[name$='[" + input_name + "]']");
       if (sortable_input.length) {

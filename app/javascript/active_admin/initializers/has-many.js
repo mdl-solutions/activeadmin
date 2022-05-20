@@ -14,7 +14,7 @@ $(function() {
   $(document).on('click', 'a.button.has_many_remove', function(event){
     event.preventDefault();
     const parent    = $(this).closest('.has_many_container');
-    const to_remove = $(this).closest('fieldset');
+    const to_remove = $(this).closest('.has_many_fields');
     recompute_positions(parent);
 
     parent.trigger('has_many_remove:before', [to_remove, parent]);
@@ -64,8 +64,8 @@ $(function() {
 var init_sortable = function() {
   const elems = $('.has_many_container[data-sortable]:not(.ui-sortable)');
   elems.sortable({
-    items: '> fieldset',
-    handle: '> ol > .handle',
+    items: '> .has_many_fields',
+    handle: '> .card-body > .handle',
     start: (ev, ui) => {
       ui.item.css({opacity: 0.3});
     },
@@ -82,7 +82,7 @@ var recompute_positions = function(parent){
   const input_name = parent.data('sortable');
   let position = parseInt(parent.data('sortable-start') || 0, 10);
 
-  parent.children('fieldset').each(function() {
+  parent.children('.has_many_fields').each(function() {
     // We ignore nested inputs, so when defining your has_many, be sure to keep
     // your sortable input at the root of the has_many block.
     const destroy_input  = $(this).find("> ol > .input > :input[name$='[_destroy]']");
