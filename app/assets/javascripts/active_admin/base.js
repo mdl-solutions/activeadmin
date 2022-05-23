@@ -419,8 +419,8 @@
     var input_name = parent.data("sortable");
     var position = parseInt(parent.data("sortable-start") || 0, 10);
     parent.children(".has_many_fields").each(function() {
-      var destroy_input = $(this).find("> ol > .input > :input[name$='[_destroy]']");
-      var sortable_input = $(this).find("> ol > .input > :input[name$='[" + input_name + "]']");
+      var destroy_input = $(this).find("> div > div > :input[name$='[_destroy]']");
+      var sortable_input = $(this).find("> div > div > :input[name$='[" + input_name + "]']");
       if (sortable_input.length) {
         sortable_input.val(destroy_input.is(":checked") ? "" : position++);
       }

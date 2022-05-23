@@ -85,8 +85,8 @@ var recompute_positions = function(parent){
   parent.children('.has_many_fields').each(function() {
     // We ignore nested inputs, so when defining your has_many, be sure to keep
     // your sortable input at the root of the has_many block.
-    const destroy_input  = $(this).find("> ol > .input > :input[name$='[_destroy]']");
-    const sortable_input = $(this).find(`> ol > .input > :input[name$='[${input_name}]']`);
+    const destroy_input  = $(this).find("> div > div > :input[name$='[_destroy]']");
+    const sortable_input = $(this).find(`> div > div > :input[name$='[${input_name}]']`);
 
     if (sortable_input.length) {
       sortable_input.val(destroy_input.is(':checked') ? '' : position++);
