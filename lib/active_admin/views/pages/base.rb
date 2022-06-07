@@ -66,13 +66,16 @@ module ActiveAdmin
                   div class: 'p-2' do
                     i class: 'bi bi-person-circle', style: 'font-size: 2rem;'
                   end
+                  button class: 'navbar-toggler', type: 'button', 'data-bs-toggle': 'collapse', 'data-bs-target': '#main-sidebar', 'aria-controls': 'mai-sidebar', 'aria-expanded': false, 'aria-label': 'Toggle navigation' do
+                    span class: 'navbar-toggler-icon'
+                  end
                 end
               end
-              div class: "row" do
-                div id: 'main-sidebar', class: "col-2 min-vh-100" do
+              div id: 'main-wrapper', class: "d-flex" do
+                div id: 'main-sidebar', class: "ps-2 min-vh-100" do
                   header active_admin_namespace, current_menu
                 end
-                div id: 'main-content', class: "col-10" do
+                div id: 'main-content', class: "px-2 flex-fill" do
                   title_bar title, action_items_for_action
                   build_page_content
                   footer active_admin_namespace
