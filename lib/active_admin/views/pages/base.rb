@@ -63,11 +63,23 @@ module ActiveAdmin
                   # div class: 'p-2' do
                   #   utility_navigation @utility_menu, id: "utility_nav", class: "header-item tabs"
                   # end
-                  div class: 'p-2' do
-                    i class: 'bi bi-person-circle', style: 'font-size: 2rem;'
-                  end
                   button class: 'navbar-toggler', type: 'button', 'data-bs-toggle': 'collapse', 'data-bs-target': '#main-sidebar', 'aria-controls': 'mai-sidebar', 'aria-expanded': false, 'aria-label': 'Toggle navigation' do
                     span class: 'navbar-toggler-icon'
+                  end
+                  div class: 'dropdown p-2' do
+                    a href: '#', id: 'userMenuDropdownLink', class: 'btn dropdown-toggle text-white', role: 'button', 'data-bs-toggle': 'dropdown', 'aria-expanded': false do
+                      i class: 'fa-solid fa-circle-user', style: 'font-size: 2rem;'
+                    end
+                    ul class: 'dropdown-menu', 'aria-labelledby': 'userMenuDropdownLink' do
+                      li class: 'dropdown-item disabled' do
+                        current_user.email
+                      end
+                      li class: 'dropdown-item' do
+                        a href: self.send(ActiveAdmin.application.logout_link_path) do
+                          'Log uit'
+                        end
+                      end
+                    end
                   end
                 end
               end
