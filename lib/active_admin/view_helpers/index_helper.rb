@@ -66,7 +66,7 @@ module ActiveAdmin
           
           div class: "card-body" do
             div class: 'tab-content', id: 'nav-tabContent' do
-              div class: 'tab-pane fade show active', id: 'nav-index-table', role: 'tabpanel', 'aria-labelledby': 'nav-index-tab' do
+              div class: 'tab-pane fade show active', id: "nav-index-#{current_index_name}", role: 'tabpanel', 'aria-labelledby': 'nav-index-tab' do
                 yield
               end
               div class: 'tab-pane fade', id: 'nav-filters', role: 'tabpanel', 'aria-labelledby': 'nav-filters-tab' do
@@ -84,12 +84,18 @@ module ActiveAdmin
         end
       end
 
-      def current_index?(index_name)
-        if params[:as]
-          params[:as] == index_name
+      def current_index_name
+        if params[:as].present?
+          params[:as]
+        elsif active_admin_config.page_presenters[:index].count == 1
+          active_admin_config.page_presenters[:index].keys.first
         else
-          active_admin_config.default_index_class&.index_name == index_name
+          active_admin_config.default_index_class&.index_name
         end
+      end
+      
+      def current_index?(index_name)
+        index_name == current_index_name
       end
 
     end

@@ -64,6 +64,10 @@ module ActiveAdmin
             f.filter attribute, filter_opts
           end
 
+          clearfix = content_tag :div, class: 'clearfix' do
+          end
+          f.template.concat clearfix
+
           buttons = content_tag :div, class: "buttons" do
             f.submit(I18n.t("active_admin.filters.buttons.filter"), class: 'btn btn-success me-1') +
               link_to(I18n.t("active_admin.filters.buttons.clear"), "#", class: "clear_filters_btn btn btn-danger") +
