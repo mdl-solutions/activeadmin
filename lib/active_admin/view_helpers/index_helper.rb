@@ -87,7 +87,7 @@ module ActiveAdmin
       def current_index_name
         if params[:as].present?
           params[:as]
-        elsif active_admin_config.page_presenters[:index].count == 1
+        elsif active_admin_config.page_presenters[:index]&.count == 1
           active_admin_config.page_presenters[:index].keys.first
         else
           active_admin_config.default_index_class&.index_name
