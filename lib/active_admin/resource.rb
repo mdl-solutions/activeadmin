@@ -150,7 +150,7 @@ module ActiveAdmin
     end
 
     def belongs_to_param
-      if belongs_to? && belongs_to_config.required?
+      if belongs_to?# && belongs_to_config.required?
         belongs_to_config.to_param
       end
     end
