@@ -66,10 +66,15 @@ module ActiveAdmin
       create_another_param = :create_another if config.create_another
 
       controller do
+        # Override this method when using multiple belongs_to to add additional permitted parameters
+        define_method :belongs_to_params do
+          Array.wrap(belongs_to_param)
+        end
+
         define_method :permitted_params do
           permitted_params =
             active_admin_namespace.permitted_params +
-              Array.wrap(belongs_to_param) +
+              belongs_to_params +
               Array.wrap(create_another_param)
 
           params.permit(*permitted_params, param_key => block ? instance_exec(&block) : args)
