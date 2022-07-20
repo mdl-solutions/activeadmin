@@ -45,16 +45,16 @@ module ActiveAdmin
                   ]
                 end
               end
-              if current_index?('table')
-                li class: 'nav-item' do
-                  a class: 'nav-link', id: 'nav-columns-tab', role: 'button', href: '#nav-columns', 'data-bs-toggle': 'tab' do
-                    [
-                      i('', { class: 'me-1 fas fa-columns' }),
-                      text_node('Kolommen'),
-                    ]
-                  end
-                end
-              end
+              # if current_index?('table')
+              #   li class: 'nav-item' do
+              #     a class: 'nav-link', id: 'nav-columns-tab', role: 'button', href: '#nav-columns', 'data-bs-toggle': 'tab' do
+              #       [
+              #         i('', { class: 'me-1 fas fa-columns' }),
+              #         text_node('Kolommen'),
+              #       ]
+              #     end
+              #   end
+              # end
             end
           end
           # div id: 'filters', class: 'card-body bg-light border-bottom' do

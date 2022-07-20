@@ -41,8 +41,36 @@ module ActiveAdmin
 
       def item(*args, **kwargs)
         within @menu do
-          li link_to(*args, **kwargs), class: 'dropdown-item'
+          if kwargs[:icon].present?
+            args[0] = "<i class=\"mx-1 fas fa-#{kwargs[:icon]}\" ></i> #{args[0]}".html_safe
+          end
+          
+          li link_to(*args, **kwargs, class: 'dropdown-item')
         end
+      end
+
+      def show_item(resource, options = {})
+        localizer = ActiveAdmin::Localizers.resource(active_admin_config)
+        item localizer.t(:view), resource_path(resource), icon: 'eye', class: "view_link #{options[:css_class]}", title: localizer.t(:view)
+      end
+
+      def edit_item(resource, options = {})
+        localizer = ActiveAdmin::Localizers.resource(active_admin_config)
+        item localizer.t(:edit), edit_resource_path(resource), icon: 'pencil', class: "edit_link #{options[:css_class]}", title: localizer.t(:edit)
+      end
+
+      def destroy_item(resource, options = {})
+        localizer = ActiveAdmin::Localizers.resource(active_admin_config)
+        options = {
+          icon: 'trash',
+          class: "delete_link #{options[:css_class]}",
+          title: localizer.t(:delete),
+          method: :delete,
+          data: {
+            confirm: localizer.t(:delete_confirmation)
+          }
+        }.merge(options)
+        item localizer.t(:delete), resource_path(resource), options
       end
 
       private
@@ -61,7 +89,7 @@ module ActiveAdmin
 
       def build_menu(options)
         options[:class] ||= ""
-        options[:class] << " dropdown-menu dropdown-menu-end"
+        options[:class] << " dropdown-menu" # dropdown-menu-end"
         # options[:class] << " dropdown_menu_list dropdown-menu" # keep dropdown_menu_list for js compatibility but also add Bootstrap dropdown-menu
 
         menu_list = nil

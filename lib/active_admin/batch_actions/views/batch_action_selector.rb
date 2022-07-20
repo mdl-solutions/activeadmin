@@ -29,7 +29,7 @@ module ActiveAdmin
         # dropdown_menu "<i class=\"me-1 fas fa-cogs\"></i> #{I18n.t("active_admin.batch_actions.button_label").split(' ').first}".html_safe,
         # dropdown_menu I18n.t("active_admin.batch_actions.button_label"),
                       id: 'batch-actions-menu',
-                      class: "batch_actions_selector dropdown",
+                      class: "batch_actions_selector dropstart",
                       'data-bs-toggle': "tooltip",
                       'data-bs-placement': "top",
                       title: I18n.t("active_admin.batch_actions.button_label"),

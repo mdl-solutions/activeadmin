@@ -353,20 +353,27 @@ module ActiveAdmin
           name = options.delete(:name) { "" }
           defaults = options.delete(:defaults) { true }
           dropdown = options.delete(:dropdown) { false }
-          dropdown = false # Never use dropdown
+          dropdown = true # Always use dropdown
           dropdown_name = options.delete(:dropdown_name) { I18n.t "active_admin.dropdown_actions.button_label", default: "Actions" }
-          dropdown_name = '<strong>Acties</strong><i class="ms-1 fas fa-cog" ></i>'.html_safe # Use FA cog icon
+          dropdown_name = '<i class="ms-1 fas fa-cog" ></i>'.html_safe # Use FA cog icon
           
           options[:class] ||= "col-actions text-center"
 
           column name, options do |resource|
             dropdown_options = {}
             dropdown_options[:id] = "col-actions-#{@collection.index(resource)}"
+            dropdown_options[:class] = "dropstart"
             
             if dropdown
               dropdown_menu dropdown_name, dropdown_options do
-                defaults(resource) if defaults
-                instance_exec(resource, &block) if block_given?
+                # defaults(resource) if defaults
+                # instance_exec(resource, &block) if block_given?
+                defaults_before(resource, css_class: :member_link) if defaults
+                if block_given?
+                  block_result = instance_exec(resource, &block)
+                  text_node block_result unless block_result.is_a? Arbre::Element
+                end
+                defaults_after(resource, css_class: :member_link) if defaults
               end
             else
               table_actions do
