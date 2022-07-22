@@ -393,18 +393,17 @@ module ActiveAdmin
         def defaults_before(resource, options = {})
           localizer = ActiveAdmin::Localizers.resource(active_admin_config)
           if controller.action_methods.include?("show") && authorized?(ActiveAdmin::Auth::READ, resource)
-            item '<i class="mx-1 fas fa-eye" ></i>'.html_safe, resource_path(resource), class: "view_link #{options[:css_class]}", title: localizer.t(:view), 'data-bs-toggle': 'tooltip', 'data-bs-placement': 'top'
+            show_item(resource)
           end
           if controller.action_methods.include?("edit") && authorized?(ActiveAdmin::Auth::UPDATE, resource)
-            item '<i class="mx-1 fas fa-pencil" ></i>'.html_safe, edit_resource_path(resource), class: "edit_link #{options[:css_class]}", title: localizer.t(:edit), 'data-bs-toggle': 'tooltip', 'data-bs-placement': 'top'
+            edit_item(resource)
           end
         end
 
         def defaults_after(resource, options = {})
           localizer = ActiveAdmin::Localizers.resource(active_admin_config)
           if controller.action_methods.include?("destroy") && authorized?(ActiveAdmin::Auth::DESTROY, resource)
-            item '<i class="mx-1 fas fa-trash" ></i>'.html_safe, resource_path(resource), class: "delete_link #{options[:css_class]}", title: localizer.t(:delete), 'data-bs-toggle': 'tooltip', 'data-bs-placement': 'top',
-                                                                method: :delete, data: { confirm: localizer.t(:delete_confirmation) }
+            destroy_item(resource)
           end
         end
 
