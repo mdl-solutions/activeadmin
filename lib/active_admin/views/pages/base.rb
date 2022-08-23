@@ -26,8 +26,6 @@ module ActiveAdmin
           within head do
             html_title [title, helpers.active_admin_namespace.site_title(self)].compact.join(" | ")
 
-            text_node(active_admin_namespace.head)
-
             active_admin_application.stylesheets.each do |style, options|
               stylesheet_tag = active_admin_namespace.use_webpacker ? stylesheet_pack_tag(style, **options) : stylesheet_link_tag(style, **options)
               text_node(stylesheet_tag.html_safe) if stylesheet_tag
@@ -46,6 +44,8 @@ module ActiveAdmin
               text_node(favicon_link_tag(active_admin_namespace.favicon))
             end
 
+            text_node(active_admin_namespace.head)
+
             text_node csrf_meta_tag
           end
         end
@@ -56,18 +56,7 @@ module ActiveAdmin
               div id: 'top-bar', class: "row fixed-top" do
                 @utility_menu = active_admin_namespace.fetch_menu(:utility_navigation)
                 
-                div class: 'd-flex' do
-                  div class: 'p-2 flex-grow-1' do
-                    site_title active_admin_namespace
-                  end
-                  # div class: 'p-2' do
-                  #   utility_navigation @utility_menu, id: "utility_nav", class: "header-item tabs"
-                  # end
-                  button class: 'navbar-toggler', type: 'button', 'data-bs-toggle': 'collapse', 'data-bs-target': '#main-sidebar', 'aria-controls': 'mai-sidebar', 'aria-expanded': false, 'aria-label': 'Toggle navigation' do
-                    span class: 'navbar-toggler-icon'
-                  end
-                  build_navbar
-                end
+                build_navbar
               end
               div id: 'main-wrapper', class: "d-flex" do
                 div id: 'main-sidebar', class: "ps-2 min-vh-100" do
@@ -99,6 +88,17 @@ module ActiveAdmin
         end
 
         def build_navbar
+          div class: 'd-flex' do
+            div class: 'p-2 flex-grow-1' do
+              site_title active_admin_namespace
+            end
+            # div class: 'p-2' do
+            #   utility_navigation @utility_menu, id: "utility_nav", class: "header-item tabs"
+            # end
+            button class: 'navbar-toggler', type: 'button', 'data-bs-toggle': 'collapse', 'data-bs-target': '#main-sidebar', 'aria-controls': 'mai-sidebar', 'aria-expanded': false, 'aria-label': 'Toggle navigation' do
+              span class: 'navbar-toggler-icon'
+            end
+          end
         end
 
         def build_page_content
