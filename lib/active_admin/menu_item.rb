@@ -2,7 +2,8 @@ module ActiveAdmin
   class MenuItem
     include Menu::MenuNode
 
-    attr_reader :html_options, :parent, :priority
+    attr_reader :html_options, :parent, :priority, :icon
+    attr_writer :icon
 
     # Builds a new menu item
     #
@@ -22,6 +23,10 @@ module ActiveAdmin
     # @option options [Integer] :priority
     #         The lower the priority, the earlier in the menu the item will be displayed.
     #         Default: 10
+    #
+    # @option options [String] :icon
+    #         Name of a Fontawesome icon
+    #         Default: nil
     #
     # @option options [Symbol, Proc] :if
     #         This decides whether the menu item will be displayed. Evaluated on each request.

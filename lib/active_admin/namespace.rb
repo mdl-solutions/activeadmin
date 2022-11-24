@@ -133,7 +133,8 @@ module ActiveAdmin
     #
     # @return [void]
     def build_menu(name = DEFAULT_MENU)
-      @menus.before_build do |menus|
+      # MDL NOTE: Changed this from before_build to on_build so that custom code can be run AFTER default menu has been constructed
+      @menus.on_build do |menus|
         menus.menu name do |menu|
           yield menu
         end

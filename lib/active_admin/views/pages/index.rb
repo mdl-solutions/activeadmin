@@ -112,7 +112,7 @@ module ActiveAdmin
         def render_blank_slate
           blank_slate_content = nil
           if active_admin_config.blank_slate.present?
-            blank_slate_content = active_admin_config.blank_slate.call
+            blank_slate_content = active_admin_config.blank_slate.call(params)
           end
           if blank_slate_content.nil?
             blank_slate_content = I18n.t("active_admin.blank_slate.content", resource_name: active_admin_config.plural_resource_label)

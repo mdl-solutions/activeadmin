@@ -7,6 +7,7 @@ module ActiveAdmin
       attr_reader :label
       attr_reader :url
       attr_reader :priority
+      attr_reader :icon
 
       def build(item, options = {})
         super(options.merge(id: item.id))
@@ -26,7 +27,11 @@ module ActiveAdmin
             item_options.merge!(href: "##{sub_menu_id}", role: 'button', data: { 'bs-toggle': 'collapse' }, 'aria-expanded': is_current.to_s, 'aria-controls': sub_menu_id)
             # item_options.merge!(role: 'button', data: { 'bs-toggle': 'collapse', 'bs-target': '##{item.id}-sub' }, 'aria-expanded': is_current.to_s, 'aria-controls': "#{item.id}-sub")
           end
-          text_node link_to label, url, **item_options
+          label_text = label
+          if item.icon.present?
+            label_text = "<i class=\"far fa-#{item.icon} fa-fw me-3\" data-fa-transform=\"down-3\"></i>#{label}".html_safe
+          end
+          text_node link_to label_text, url, **item_options
         else
           span label, item.html_options
         end

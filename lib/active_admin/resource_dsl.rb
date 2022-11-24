@@ -86,8 +86,8 @@ module ActiveAdmin
 
 
     # Configure the blank slate for the resource
-    def blank_slate(&block)
-      config.blank_slate = block
+    def blank_slate(proc = nil, &block)
+      config.blank_slate = proc || block
     end
 
     # Configure the index page for the resource
