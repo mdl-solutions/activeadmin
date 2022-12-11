@@ -6,6 +6,8 @@ module ActiveAdmin
 
       class Index < Base
 
+        include ActiveAdmin::ViewHelpers::IndexHelper
+        
         def title
           if Proc === config[:title]
             controller.instance_exec &config[:title]
@@ -16,8 +18,9 @@ module ActiveAdmin
 
         # Retrieves the given page presenter, or uses the default.
         def config
-          active_admin_config.get_page_presenter(:index, params[:as]) ||
-          ActiveAdmin::PagePresenter.new(as: :table)
+          index_name = current_index_name
+          
+          active_admin_config.get_page_presenter(:index, index_name)
         end
 
         # Renders the index configuration that was set in the
@@ -46,13 +49,16 @@ module ActiveAdmin
         end
 
         def build_collection
-          if items_in_collection?
-            render_index
-          else
-            if params[:q] || params[:scope]
-              render_empty_results
+          # render_index
+          index_tabs do
+            if items_in_collection?
+              render_index
             else
-              render_blank_slate
+              if params[:q] || params[:scope]
+                render_empty_results
+              else
+                render_blank_slate
+              end
             end
           end
         end
@@ -129,7 +135,9 @@ module ActiveAdmin
         end
 
         def render_index
-          renderer_class = find_index_renderer_class(config[:as])
+          index_name = config[:as]
+          
+          renderer_class = find_index_renderer_class(index_name)
 
           paginator = config.fetch(:paginator, true)
           download_links = config.fetch(:download_links, active_admin_config.namespace.download_links)
@@ -147,6 +155,11 @@ module ActiveAdmin
               insert_tag(renderer_class, config, collection)
             end
           end
+          
+          if session[session_key].nil?
+            session[session_key] = {}
+          end
+          session[session_key]['last_index_name'] = index_name
         end
 
         private

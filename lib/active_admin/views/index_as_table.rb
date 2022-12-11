@@ -234,8 +234,6 @@ module ActiveAdmin
     #
     class IndexAsTable < ActiveAdmin::Component
 
-      include ActiveAdmin::ViewHelpers::IndexHelper
-
       def build(page_presenter, collection)
         table_options = {
           id: "index_table_#{active_admin_config.resource_name.plural}",
@@ -246,12 +244,10 @@ module ActiveAdmin
           row_class: page_presenter[:row_class]
         }
         
-        index_tabs do
-          div class: "table-responsive" do
-            table_for collection, table_options do |t|
-              table_config_block = page_presenter.block || default_table
-              instance_exec(t, &table_config_block)
-            end
+        div class: "table-responsive" do
+          table_for collection, table_options do |t|
+            table_config_block = page_presenter.block || default_table
+            instance_exec(t, &table_config_block)
           end
         end
       end

@@ -85,8 +85,12 @@ module ActiveAdmin
       end
 
       def current_index_name
+        last_index_name = session[session_key]&.[]('last_index_name')
+        
         if params[:as].present?
           params[:as]
+        elsif last_index_name.present?
+          last_index_name
         elsif active_admin_config.page_presenters[:index]&.count == 1
           active_admin_config.page_presenters[:index].keys.first
         else
@@ -95,9 +99,14 @@ module ActiveAdmin
       end
       
       def current_index?(index_name)
-        index_name == current_index_name
+        index_name.to_s == current_index_name.to_s
+      end
+
+      def session_key
+        (controller.class.name.gsub('::', '').sub(/Controller$/, '').underscore + '_index_config').to_sym
       end
 
     end
+
   end
 end
