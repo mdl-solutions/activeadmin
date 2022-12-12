@@ -49,6 +49,28 @@ module ActiveAdmin
         end
       end
 
+      def defaults(resource, options = {})
+        defaults_before(resource, options)
+        defaults_after(resource, options)
+      end
+
+      def defaults_before(resource, options = {})
+        localizer = ActiveAdmin::Localizers.resource(active_admin_config)
+        if controller.action_methods.include?("show") && authorized?(ActiveAdmin::Auth::READ, resource)
+          show_item(resource)
+        end
+        if controller.action_methods.include?("edit") && authorized?(ActiveAdmin::Auth::UPDATE, resource)
+          edit_item(resource)
+        end
+      end
+
+      def defaults_after(resource, options = {})
+        localizer = ActiveAdmin::Localizers.resource(active_admin_config)
+        if controller.action_methods.include?("destroy") && authorized?(ActiveAdmin::Auth::DESTROY, resource)
+          destroy_item(resource)
+        end
+      end
+
       def show_item(resource, options = {})
         localizer = ActiveAdmin::Localizers.resource(active_admin_config)
         item localizer.t(:view), resource_path(resource), icon: 'eye', class: "view_link #{options[:css_class]}", title: localizer.t(:view)

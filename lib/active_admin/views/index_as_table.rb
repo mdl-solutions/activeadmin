@@ -386,23 +386,6 @@ module ActiveAdmin
 
         private
 
-        def defaults_before(resource, options = {})
-          localizer = ActiveAdmin::Localizers.resource(active_admin_config)
-          if controller.action_methods.include?("show") && authorized?(ActiveAdmin::Auth::READ, resource)
-            show_item(resource)
-          end
-          if controller.action_methods.include?("edit") && authorized?(ActiveAdmin::Auth::UPDATE, resource)
-            edit_item(resource)
-          end
-        end
-
-        def defaults_after(resource, options = {})
-          localizer = ActiveAdmin::Localizers.resource(active_admin_config)
-          if controller.action_methods.include?("destroy") && authorized?(ActiveAdmin::Auth::DESTROY, resource)
-            destroy_item(resource)
-          end
-        end
-
         class TableActions < ActiveAdmin::Component
           builder_method :table_actions
 
