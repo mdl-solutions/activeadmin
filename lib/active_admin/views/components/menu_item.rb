@@ -16,6 +16,11 @@ module ActiveAdmin
         @priority = item.priority
         @submenu = nil
         
+        visible_child_items = item.items.select{|i| helpers.render_in_context(self, i.should_display) }
+        if visible_child_items.count == 1
+          @url = helpers.render_in_context self, visible_child_items.first.url
+        end
+        
         is_current = item.current? assigns[:current_tab]
         add_class "current" if is_current
         
@@ -23,7 +28,7 @@ module ActiveAdmin
         
         if url
           item_options = item.html_options.merge(class: 'ps-0 btn')
-          if item.items.any?
+          if visible_child_items.count > 1
             item_options.merge!(href: "##{sub_menu_id}", role: 'button', data: { 'bs-toggle': 'collapse' }, 'aria-expanded': is_current.to_s, 'aria-controls': sub_menu_id)
             # item_options.merge!(role: 'button', data: { 'bs-toggle': 'collapse', 'bs-target': '##{item.id}-sub' }, 'aria-expanded': is_current.to_s, 'aria-controls': "#{item.id}-sub")
           end
@@ -36,7 +41,7 @@ module ActiveAdmin
           span label, item.html_options
         end
         
-        if item.items.any?
+        if visible_child_items.count > 1
           add_class "has_nested"
           @submenu = menu(item, { id: "#{sub_menu_id}", class: "list-unstyled collapse #{is_current ? ' show' : ''}" })
         end
