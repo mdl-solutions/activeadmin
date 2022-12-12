@@ -29,7 +29,7 @@ module ActiveAdmin
           class: 'd-flex',
           label: proc { resource.plural_resource_label },
           url: proc { resource.route_collection_path(params, url_options) },
-          if: proc { authorized?(Auth::READ, menu_resource_class) }
+          if: proc { authorized?(BaseController::Authorization::ACTIONS_DICTIONARY[:index], menu_resource_class) }
         }
       end
 
