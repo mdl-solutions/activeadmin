@@ -88,9 +88,11 @@ module ActiveAdmin
       def resource
         get_resource_ivar || begin
           resource = find_resource
-          resource = apply_decorations(resource)
-          authorize_resource! resource
-
+          if resource.present?
+            resource = apply_decorations(resource)
+            authorize_resource! resource
+          end
+          
           set_resource_ivar resource
         end
       end
