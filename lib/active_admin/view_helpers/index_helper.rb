@@ -85,7 +85,36 @@ module ActiveAdmin
       end
 
       def current_index_name
-        last_index_name = session[session_key]&.[]('last_index_name')
+        session_key = self.session_last_index_key
+        
+        last_index_name = session[session_key]&.[](resource_name)
+        
+        if last_index_name.nil?
+          # Check if older keys exist and migrate data if found to decrease cookie size
+          
+          keys_to_delete = []
+          values_to_migrate = {}
+          
+          session.each do |key, value|
+            # Find matching keys
+            if key.to_s =~ Regexp.new(mounted_name + '_(.*)_index_config')
+              # Delete old data structure and migrate value into new hash
+              keys_to_delete << key
+              values_to_migrate[$1] = value['last_index_name']
+            end
+          end
+          
+          # Delete obsolete data
+          keys_to_delete.each {|k| session.delete(k)}
+          
+          # Save migrated data
+          session[session_key] = values_to_migrate.merge(session[session_key] || {})
+          
+          # Attempt to find last index name in newly migrated data
+          last_index_name = session[session_key]&.[](resource_name)
+          
+          # raise session.inspect
+        end
         
         if params[:as].present?
           params[:as]
@@ -102,8 +131,17 @@ module ActiveAdmin
         index_name.to_s == current_index_name.to_s
       end
 
-      def session_key
-        (controller.class.name.gsub('::', '').sub(/Controller$/, '').underscore + '_index_config').to_sym
+      def mounted_name
+        controller.class.name.split('::').first.underscore
+      end
+
+      def resource_name
+        controller.class.name.split('::').drop(1).join('').underscore
+      end
+
+      def session_last_index_key
+        (mounted_name + '_last_index').to_sym
+        # (controller.class.name.gsub('::', '').sub(/Controller$/, '').underscore + '_index_config').to_sym
       end
 
     end

@@ -156,10 +156,11 @@ module ActiveAdmin
             end
           end
           
+          session_key = session_last_index_key
           if session[session_key].nil?
             session[session_key] = {}
           end
-          session[session_key]['last_index_name'] = index_name
+          session[session_key][resource_name] = index_name
         end
 
         private
