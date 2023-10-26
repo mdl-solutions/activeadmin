@@ -12,9 +12,9 @@ Ransack.configure do |config|
 
   config.add_predicate "gteq_datetime",
                        arel_predicate: "gteq",
-                       formatter: ->(v) { v.beginning_of_day }
+                       formatter: ->(v) { if v.kind_of?(String) then v = Date.strptime(v) end; v.beginning_of_day }
 
   config.add_predicate "lteq_datetime",
                        arel_predicate: "lt",
-                       formatter: ->(v) { v + 1.day }
+                       formatter: ->(v) { if v.kind_of?(String) then v = Date.strptime(v) end; v + 1.day }
 end

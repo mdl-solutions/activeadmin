@@ -48,21 +48,24 @@ module ActiveAdmin
       def active_admin_filters_form_for(search, filters, options = {})
         defaults = { builder: ActiveAdmin::Filters::FormBuilder,
                      url: collection_path,
-                     html: { class: "filter_form row row-cols-1 row-cols-lg-2 row-cols-xxl-3" } }
+                     html: { class: "filter_form" } }
         required = { html: { method: :get },
                      as: :q }
         options = defaults.deep_merge(options).deep_merge(required)
 
         form_for search, options do |f|
-          filters.each do |attribute, opts|
-            next if opts.key?(:if) && !call_method_or_proc_on(self, opts[:if])
-            next if opts.key?(:unless) && call_method_or_proc_on(self, opts[:unless])
+          filter_fields = content_tag :div, class: "filter_form_fields row row-cols-1 row-cols-lg-2 row-cols-xxl-3" do
+            filters.each do |attribute, opts|
+              next if opts.key?(:if) && !call_method_or_proc_on(self, opts[:if])
+              next if opts.key?(:unless) && call_method_or_proc_on(self, opts[:unless])
 
-            filter_opts = opts.except(:if, :unless)
-            filter_opts[:input_html] = instance_exec(&filter_opts[:input_html]) if filter_opts[:input_html].is_a?(Proc)
+              filter_opts = opts.except(:if, :unless)
+              filter_opts[:input_html] = instance_exec(&filter_opts[:input_html]) if filter_opts[:input_html].is_a?(Proc)
 
-            f.filter attribute, filter_opts
+              f.filter attribute, filter_opts
+            end
           end
+          f.template.concat filter_fields
 
           clearfix = content_tag :div, class: 'clearfix' do
           end
@@ -73,7 +76,6 @@ module ActiveAdmin
               link_to(I18n.t("active_admin.filters.buttons.clear"), "#", class: "clear_filters_btn btn btn-danger") +
               hidden_field_tags_for(params, except: except_hidden_fields)
           end
-
           f.template.concat buttons
         end
       end
