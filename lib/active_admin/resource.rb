@@ -202,6 +202,10 @@ module ActiveAdmin
       @content_columns ||= resource_attributes.select { |key, value| key == value }.values
     end
 
+    def options
+      @options
+    end
+
     private
 
     def method_for_find(id)

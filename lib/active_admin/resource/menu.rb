@@ -24,12 +24,14 @@ module ActiveAdmin
         # These local variables are accessible to the procs.
         menu_resource_class = respond_to?(:resource_class) ? resource_class : self
         resource = self
+        index_permission_name = resource.try(:options)&.[](:index_permission_name) || BaseController::Authorization::ACTIONS_DICTIONARY[:index]
+        index_permission_subject = resource.try(:options)&.[](:index_permission_subject) || menu_resource_class
         {
           id: resource_name.plural,
           class: 'd-flex',
           label: proc { resource.plural_resource_label },
           url: proc { resource.route_collection_path(params, url_options) },
-          if: proc { authorized?(BaseController::Authorization::ACTIONS_DICTIONARY[:index], menu_resource_class) }
+          if: proc { authorized?(index_permission_name, index_permission_subject) }
         }
       end
 
